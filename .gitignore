@@ -1,0 +1,42 @@
+# .gitignore for .NET projects
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+# Packages folder can be ignored if using PackageReference
+packages/
+# Visual Studio 2017 auto generated files
+*.VC.db
+*.VC.VC.opendb
+
+# Others
+*.vspscc
+*.vssscc
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Azure Service Bus Playground specific
+# (add any project-specific ignores below)

@@ -1,0 +1,8 @@
+﻿namespace AzureServiceBusPlayground.ApiService.Models;
+
+public record CreateOrderRequest(
+    Guid CustomerId,
+    string CustomerName,
+    string CustomerEmail,
+    IEnumerable<OrderItem> Items,
+    decimal TotalAmount);
