@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusPlayground.AppHost", "AzureServiceBusPlayground.AppHost\AzureServiceBusPlayground.AppHost.csproj", "{AB7870C1-A499-41D1-84F8-2FB897212D1F}"
 EndProject
@@ -11,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusPlayground.Notifications", "AzureServiceBusPlayground.Notifications\AzureServiceBusPlayground.Notifications.csproj", "{06A7990E-0937-5574-C8DC-06A2BD33D3D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusPlayground.Domain", "AzureServiceBusPlayground.Domain\AzureServiceBusPlayground.Domain.csproj", "{ADA4C3CD-1BC9-43A6-B454-4BB3BC911D1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AB7870C1-A499-41D1-84F8-2FB897212D1F} = {8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}
+		{07D04BD3-5B13-B882-F499-22BD377EA28A} = {8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}
+		{9122382C-048C-0AF8-0240-F66B59C8CC2C} = {8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}
+		{06A7990E-0937-5574-C8DC-06A2BD33D3D9} = {8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}
+		{ADA4C3CD-1BC9-43A6-B454-4BB3BC911D1F} = {8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D32484F0-E016-4FCB-984C-14ABCDE24AA9}
