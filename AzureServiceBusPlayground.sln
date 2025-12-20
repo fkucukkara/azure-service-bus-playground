@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusPlayground.AppHost", "AzureServiceBusPlayground.AppHost\AzureServiceBusPlayground.AppHost.csproj", "{AB7870C1-A499-41D1-84F8-2FB897212D1F}"
 EndProject
@@ -13,6 +13,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusPlayground.Domain", "AzureServiceBusPlayground.Domain\AzureServiceBusPlayground.Domain.csproj", "{ADA4C3CD-1BC9-43A6-B454-4BB3BC911D1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8DD84CDE-43D1-4956-95E5-8DA9CDF24F86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{705D7198-FDCC-4828-A121-18E556B2570F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\copilot-instructions.md = .github\copilot-instructions.md
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

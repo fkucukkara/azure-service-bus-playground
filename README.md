@@ -20,7 +20,7 @@ This project is an educational playground for learning and experimenting with Az
 ## Getting Started
 
 ### Prerequisites
-- [.NET 7.0 SDK or later](https://dotnet.microsoft.com/download)
+- [.NET 10.0 SDK or later](https://dotnet.microsoft.com/download)
 - [Azure Subscription](https://azure.microsoft.com/free/)
 - [Azure Service Bus Namespace](https://docs.microsoft.com/azure/service-bus-messaging/service-bus-create-namespace-portal)
 
