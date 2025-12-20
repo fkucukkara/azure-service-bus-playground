@@ -19,10 +19,10 @@ This is a **.NET Aspire** distributed application demonstrating Azure Service Bu
 
 ### Key Architectural Decisions
 - **Dual publish pattern**: Same message sent to queue AND topic for demonstrating both patterns
-- **Primary key constructors**: All services use C# 12 primary constructors
+- **Primary key constructors**: All services use C# 14 primary constructors
 - **Record types**: Domain events and DTOs are immutable records
 - **Scoped publisher**: `IServiceBusPublisher` is scoped; `ServiceBusClient` is singleton
-- **.NET 9 + Aspire 9.5.0**: Uses latest SDK features (see `global.json`)
+- **.NET 10 + C# 14 + Aspire 10.0.0**: Uses latest SDK features (see `global.json`)
 
 ## Project-Specific Conventions
 
