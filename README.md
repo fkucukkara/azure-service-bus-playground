@@ -3,7 +3,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![C# 14](https://img.shields.io/badge/C%23-14-239120)](https://learn.microsoft.com/dotnet/csharp/)
-[![Aspire 10.0](https://img.shields.io/badge/Aspire-10.0-5C2D91)](https://learn.microsoft.com/dotnet/aspire/)
+[![Aspire 13.1](https://img.shields.io/badge/Aspire-13.1-5C2D91)](https://learn.microsoft.com/dotnet/aspire/)
 
 An educational playground for learning Azure Service Bus messaging patterns using **.NET Aspire**. This project demonstrates real-world scenarios including **queues**, **topics/subscriptions**, and the **dual publish pattern** in a distributed microservices architecture.
 
