@@ -55,7 +55,6 @@ POST /api/orders
 - **Primary Constructors**: All services use C# 14 primary constructors for DI
 - **Record Types**: Domain events and DTOs are immutable records
 - **Scoped Publisher**: `IServiceBusPublisher` is scoped; `ServiceBusClient` is singleton
-- **.NET 10 + C# 14 + Aspire 13.1**: Uses latest SDK features (see `global.json`)
 - **Manual Message Completion**: `AutoCompleteMessages = false` for explicit error handling
 - **Sequential Processing**: `MaxConcurrentCalls = 1` (educational constraint - increase for production)
 
