@@ -14,6 +14,7 @@ An educational playground for learning Azure Service Bus messaging patterns usin
 - Building distributed applications with **.NET Aspire** orchestration
 - **Event-driven architecture** with domain events
 - Message processing with **manual completion** and error handling
+- **Local development** with Azure Service Bus Emulator (no Azure subscription required!)
 - Modern C# features: **primary constructors**, **record types**, and **top-level statements**
 - Observability with **OpenTelemetry** tracing and metrics
 
@@ -65,6 +66,8 @@ POST /api/orders
 - ✅ **Topic/Subscription Processing**: Demonstrates pub-sub messaging
 - ✅ **Event-Driven Architecture**: Decoupled services communicating via domain events
 - ✅ **Aspire Orchestration**: Automatic service discovery, configuration, and dashboard
+- ✅ **Service Bus Emulator**: Local development without Azure subscription using containerized emulator
+- ✅ **Auto-Provisioned Entities**: Queue, topic, and subscription created automatically by Aspire
 - ✅ **OpenTelemetry Integration**: Built-in distributed tracing and metrics
 - ✅ **Health Checks**: `/health` and `/alive` endpoints on all services
 - ✅ **Error Handling**: Manual message completion with abandon/dead-letter patterns
@@ -75,50 +78,74 @@ POST /api/orders
 ### Prerequisites
 
 - [.NET 10.0 SDK or later](https://dotnet.microsoft.com/download)
-- [Azure Subscription](https://azure.microsoft.com/free/) (or use [Azure Service Bus Emulator](https://learn.microsoft.com/azure/service-bus-messaging/overview-emulator) for local dev)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (required for Azure Service Bus Emulator)
 - [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/vs/preview/) or [Visual Studio Code](https://code.visualstudio.com/) with [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (optional, for automated setup)
+- [Azure Subscription](https://azure.microsoft.com/free/) (optional - only needed if connecting to cloud Service Bus)
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (optional - only needed for cloud setup)
 
 ### Azure Service Bus Setup
 
-You need to create these entities in Azure Service Bus:
+#### Default: Local Emulator (Recommended for Development)
 
-| Entity Type | Name | Description |
-|-------------|------|-------------|
-| Queue | `orders` | Receives order created events |
-| Topic | `order-events` | Broadcasts order events to subscribers |
-| Subscription | `notifications` | Under `order-events` topic |
+By default, this project uses the **Azure Service Bus Emulator** running in Docker. **No Azure subscription or manual setup is required!**
 
-#### Option 1: Azure Portal
+The following entities are **automatically provisioned** by Aspire when you run the application:
 
-1. Create a [Service Bus namespace](https://learn.microsoft.com/azure/service-bus-messaging/service-bus-create-namespace-portal)
-2. Create a queue named `orders`
-3. Create a topic named `order-events`
-4. Create a subscription named `notifications` under the `order-events` topic
-5. Copy the connection string from **Shared access policies** → **RootManageSharedAccessKey**
+| Entity Type | Name | Description | Configuration |
+|-------------|------|-------------|---------------|
+| Queue | `orders` | Receives order created events | MaxDeliveryCount = 5 |
+| Topic | `order-events` | Broadcasts order events to subscribers | - |
+| Subscription | `notifications` | Under `order-events` topic | MaxDeliveryCount = 5 |
 
-#### Option 2: Azure CLI
+The emulator container runs with **persistent lifetime**, so your data survives restarts.
 
-```bash
-# Variables
-RESOURCE_GROUP="rg-servicebus-playground"
-LOCATION="eastus"
-NAMESPACE="sb-playground-$(openssl rand -hex 4)"
+#### Alternative: Cloud Azure Service Bus
 
-# Create resources
-az group create --name $RESOURCE_GROUP --location $LOCATION
-az servicebus namespace create --name $NAMESPACE --resource-group $RESOURCE_GROUP --sku Standard
-az servicebus queue create --name orders --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
-az servicebus topic create --name order-events --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
-az servicebus topic subscription create --name notifications --topic-name order-events --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
+To use a cloud Azure Service Bus instance instead of the emulator:
 
-# Get connection string
-az servicebus namespace authorization-rule keys list \
-  --resource-group $RESOURCE_GROUP \
-  --namespace-name $NAMESPACE \
-  --name RootManageSharedAccessKey \
-  --query primaryConnectionString -o tsv
-```
+1. **Create Azure resources** using Azure Portal or CLI:
+
+   ```bash
+   # Variables
+   RESOURCE_GROUP="rg-servicebus-playground"
+   LOCATION="eastus"
+   NAMESPACE="sb-playground-$(openssl rand -hex 4)"
+
+   # Create resources
+   az group create --name $RESOURCE_GROUP --location $LOCATION
+   az servicebus namespace create --name $NAMESPACE --resource-group $RESOURCE_GROUP --sku Standard
+   az servicebus queue create --name orders --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
+   az servicebus topic create --name order-events --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
+   az servicebus topic subscription create --name notifications --topic-name order-events --namespace-name $NAMESPACE --resource-group $RESOURCE_GROUP
+
+   # Get connection string
+   az servicebus namespace authorization-rule keys list \
+     --resource-group $RESOURCE_GROUP \
+     --namespace-name $NAMESPACE \
+     --name RootManageSharedAccessKey \
+     --query primaryConnectionString -o tsv
+   ```
+
+2. **Update AppHost.cs** to use the connection string instead of emulator:
+
+   ```csharp
+   // Comment out the emulator configuration:
+   // var serviceBus = builder.AddAzureServiceBus("azure-service-bus")
+   //     .RunAsEmulator(emulator => emulator.WithLifetime(ContainerLifetime.Persistent));
+
+   // Use cloud connection string instead:
+   var asbConnString = builder.AddConnectionString("azure-service-bus");
+   ```
+
+3. **Add connection string** to `AzureServiceBusPlayground.AppHost/appsettings.Development.json`:
+
+   ```json
+   {
+     "ConnectionStrings": {
+       "azure-service-bus": "Endpoint=sb://YOUR-NAMESPACE.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=YOUR-KEY"
+     }
+   }
+   ```
 
 ### Configuration
 
@@ -128,21 +155,16 @@ az servicebus namespace authorization-rule keys list \
    cd AzureServiceBusPlayground
    ```
 
-2. **Configure connection string**
+2. **Ensure Docker is running**
    
-   Update `AzureServiceBusPlayground.AppHost/appsettings.Development.json`:
-   ```json
-   {
-     "ConnectionStrings": {
-       "azure-service-bus": "Endpoint=sb://YOUR-NAMESPACE.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=YOUR-KEY"
-     }
-   }
-   ```
+   The Azure Service Bus Emulator runs as a Docker container. Make sure Docker Desktop is running before starting the application.
 
 3. **Build the solution**
    ```bash
    dotnet build
    ```
+
+> **Note**: No connection string configuration is needed for local development! The emulator is automatically started and configured by Aspire.
 
 ### Running the Application
 
@@ -294,7 +316,24 @@ var message = new ServiceBusMessage(jsonBody)
 
 ## 🛠️ Troubleshooting
 
-### Connection Issues
+### Emulator Issues
+
+**Problem**: Emulator container fails to start
+
+**Solutions**:
+- Ensure Docker Desktop is running
+- Check Docker has enough resources allocated (memory/CPU)
+- Try removing old emulator containers: `docker rm -f $(docker ps -aq --filter "name=servicebus")`
+- Check Aspire dashboard for container logs
+
+**Problem**: `Connection refused` or timeout connecting to emulator
+
+**Solutions**:
+- Wait a few seconds after startup - the emulator needs time to initialize
+- Check the Aspire dashboard to see if the emulator container is healthy
+- Verify no other process is using the emulator's ports
+
+### Connection Issues (Cloud Service Bus)
 
 **Problem**: `ServiceBusException: The operation was aborted`
 
