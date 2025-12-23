@@ -22,3 +22,12 @@ Accept: application/json
 }
 
 ###
+
+GET {{ApiService_HostAddress}}/health
+Content-Type: application/json
+Accept: application/json
+
+###
+GET {{ApiService_HostAddress}}/alive
+Content-Type: application/json
+Accept: application/json
