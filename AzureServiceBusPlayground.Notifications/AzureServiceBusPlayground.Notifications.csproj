@@ -1,19 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <LangVersion>14</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>14</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AzureServiceBusPlayground.Domain\AzureServiceBusPlayground.Domain.csproj" />
-    <ProjectReference Include="..\AzureServiceBusPlayground.ServiceDefaults\AzureServiceBusPlayground.ServiceDefaults.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AzureServiceBusPlayground.Domain\AzureServiceBusPlayground.Domain.csproj" />
+		<ProjectReference Include="..\AzureServiceBusPlayground.ServiceDefaults\AzureServiceBusPlayground.ServiceDefaults.csproj" />
+	</ItemGroup>
 
 
 	<ItemGroup>
+		<PackageReference Include="Aspire.Azure.Messaging.ServiceBus" Version="13.1.0" />
 		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
 	</ItemGroup>
 
