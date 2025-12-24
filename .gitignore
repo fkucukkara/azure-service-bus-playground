@@ -43,3 +43,4 @@ _ReSharper*/
 
 # Azure Service Bus Playground specific
 # (add any project-specific ignores below)
+.azure

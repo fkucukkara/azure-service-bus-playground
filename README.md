@@ -4,6 +4,7 @@
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![C# 14](https://img.shields.io/badge/C%23-14-239120)](https://learn.microsoft.com/dotnet/csharp/)
 [![Aspire 13.1](https://img.shields.io/badge/Aspire-13.1-5C2D91)](https://learn.microsoft.com/dotnet/aspire/)
+[![azd compatible](https://img.shields.io/badge/azd-compatible-blue)](https://learn.microsoft.com/azure/developer/azure-developer-cli/)
 
 An educational playground for learning Azure Service Bus messaging patterns using **.NET Aspire**. This project demonstrates real-world scenarios including **queues**, **topics/subscriptions**, and the **dual publish pattern** in a distributed microservices architecture.
 
@@ -17,6 +18,7 @@ An educational playground for learning Azure Service Bus messaging patterns usin
 - **Local development** with Azure Service Bus Emulator (no Azure subscription required!)
 - Modern C# features: **primary constructors**, **record types**, and **top-level statements**
 - Observability with **OpenTelemetry** tracing and metrics
+- **One-command cloud deployment** with Azure Developer CLI (`azd up`)
 
 ## 🏗️ Architecture
 
@@ -72,6 +74,8 @@ POST /api/orders
 - ✅ **Health Checks**: `/health` and `/alive` endpoints on all services
 - ✅ **Error Handling**: Manual message completion with abandon/dead-letter patterns
 - ✅ **Modern C#**: Primary constructors, record types, global usings
+- ✅ **One-Command Deployment**: Deploy to Azure Container Apps with `azd up`
+- ✅ **CI/CD Ready**: GitHub Actions and Azure DevOps pipeline support via `azd pipeline config`
 
 ## 🚀 Getting Started
 
@@ -486,7 +490,118 @@ Before deploying to production:
 - [ ] Enable diagnostic logs and metrics
 - [ ] Test failover scenarios
 
+## ☁️ Azure Deployment
+
+This project includes **Azure Developer CLI (azd)** integration for seamless cloud deployment to **Azure Container Apps**.
+
+### Prerequisites for Deployment
+
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+- An active [Azure Subscription](https://azure.microsoft.com/free/)
+
+### One-Command Deployment
+
+Deploy the entire application to Azure with a single command:
+
+```bash
+# Authenticate with Azure (if not already logged in)
+azd auth login
+
+# Provision infrastructure and deploy in one step
+azd up
+```
+
+The `azd up` command will:
+1. **Provision Azure resources** - Container Apps Environment, Container Registry, Azure Service Bus namespace with queue/topic/subscription, and supporting infrastructure
+2. **Build container images** - Package your .NET Aspire services as containers
+3. **Deploy to Azure Container Apps** - Deploy ApiService and Notifications as containerized workloads
+4. **Configure networking** - Set up internal service discovery and external ingress
+
+### Deployment Commands
+
+| Command | Description |
+|---------|-------------|
+| `azd up` | Provision infrastructure + deploy (combined) |
+| `azd provision` | Provision infrastructure only |
+| `azd deploy` | Deploy application code only |
+| `azd down` | Delete all Azure resources |
+| `azd env list` | List all environments |
+| `azd monitor` | Open Azure Monitor dashboard |
+
+### Infrastructure as Code
+
+The project uses **.NET Aspire's built-in infrastructure generation**. Azure resources are defined in code within `AppHost.cs` and automatically translated to Bicep templates at deployment time.
+
+To view or customize the generated infrastructure:
+
+```bash
+# Generate Bicep templates to disk
+azd infra gen
+```
+
+This creates:
+- `infra/main.bicep` - Main deployment module
+- `infra/resources.bicep` - Shared resources
+- `manifests/containerApp.tmpl.yaml` - Container Apps manifests for each service
+
+### CI/CD Pipeline Setup
+
+Configure automated deployments with GitHub Actions or Azure DevOps:
+
+```bash
+# Set up deployment pipeline
+azd pipeline config -e production
+```
+
+This will:
+- Create a service principal for deployment
+- Configure GitHub/Azure DevOps secrets
+- Generate workflow files for automated deployments
+
+### Post-Deployment
+
+After successful deployment:
+
+1. **View your resources** in Azure Portal:
+   ```bash
+   azd show
+   ```
+
+2. **Access the Aspire Dashboard** - URL provided in deployment output
+
+3. **Test the API**:
+   ```bash
+   # Get the API endpoint
+   azd show --output json | jq -r '.services.app.endpoints[0]'
+   
+   # Send a test order (replace with your endpoint)
+   curl -X POST https://YOUR-API-ENDPOINT/api/orders \
+     -H "Content-Type: application/json" \
+     -d '{"customerId":"test","customerName":"Test User","customerEmail":"test@example.com","items":[{"productId":"prod1","productName":"Test Product","quantity":1,"price":9.99}],"totalAmount":9.99}'
+   ```
+
+4. **Monitor logs and traces** via Azure Monitor or the Aspire Dashboard
+
+### Cost Considerations
+
+When deployed to Azure, you'll incur costs for:
+- **Azure Container Apps** - Consumption-based pricing
+- **Azure Container Registry** - Basic tier
+- **Azure Service Bus** - Standard tier
+- **Log Analytics Workspace** - Ingestion and retention costs
+
+💡 **Tip**: Use `azd down` to delete all resources when not in use to avoid ongoing charges.
+
+Visit [Azure Cost Management](https://portal.azure.com/#blade/Microsoft_Azure_CostManagement) to monitor spending.
+
 ## 📚 Resources
+
+### Azure Developer CLI
+- [Azure Developer CLI Overview](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview)
+- [Install azd](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+- [Deploy .NET Aspire apps with azd](https://learn.microsoft.com/dotnet/aspire/deployment/azure/aca-deployment)
+- [Configure CI/CD pipelines](https://learn.microsoft.com/azure/developer/azure-developer-cli/configure-devops-pipeline)
 
 ### Azure Service Bus
 - [Azure Service Bus Documentation](https://learn.microsoft.com/azure/service-bus-messaging/)

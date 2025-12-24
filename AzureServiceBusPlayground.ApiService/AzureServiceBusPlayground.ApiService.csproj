@@ -14,8 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Azure.Messaging.ServiceBus" Version="13.1.0" />
-		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
 	</ItemGroup>
 
 </Project>
